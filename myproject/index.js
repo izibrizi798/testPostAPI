@@ -36,6 +36,6 @@ app.post('/setVar2', (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`API listening at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`API listening at http://0.0.0.0:${port}`);
 });
