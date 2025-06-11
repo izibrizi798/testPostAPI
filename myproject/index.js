@@ -13,7 +13,7 @@ let userkickreason = "1234";
 
 let userban = "user";
 let userbanreason = "1234";
-let userbantime = "1y"; // y=year m=month d=day h=hour m=minute s=second perm=permanent
+let userbantime = "1y"; // y=year mo=month d=day h=hour m=minute s=second perm=permanent
 
 // Эндпоинт для получения значений (возвращаем в виде таблицы JSON)
 app.get('/vars', (req, res) => {
