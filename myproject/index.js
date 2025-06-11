@@ -122,10 +122,6 @@ app.post('/setUserbantime', (req, res) => {
   }
 });
 
-let juser = "user";
-let jlenght = "10";
-let jtype = "1";
-
 app.post('/setjlenght', (req, res) => {
   const { value } = req.body;
   if (typeof value === 'number') {
