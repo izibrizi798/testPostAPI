@@ -7,16 +7,21 @@ app.use(express.json()); // чтобы принимать JSON в теле за�
 // Переменные (храним в памяти)
 let var1 = "значение1";
 let var2 = "значение2";
+
 let userkick = "user";
 let userkickreason = "1234";
+
+let userban = "user";
+let userbanreason = "1234";
+let userbantime = "1y"; // y=year m=month d=day h=hour m=minute s=second perm=permanent
 
 // Эндпоинт для получения значений (возвращаем в виде таблицы JSON)
 app.get('/vars', (req, res) => {
   res.json({ var1, var2 });
 });
 
-app.get('/kicks', (req, res) => {
-  res.json({ userkick, userkickreason });
+app.get('/kicksbans', (req, res) => {
+  res.json({ userkick, userkickreason, userban, userbanreason, userbantime });
 });
 
 // Эндпоинты для изменения значений
@@ -59,6 +64,36 @@ app.post('/setUserkickreason', (req, res) => {
     res.json({ status: 'ok', var2 });
   } else {
     res.status(400).json({ error: 'Value must be a string' });
+  }
+});
+
+app.post('/setUserban', (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'string' || typeof value === 'number') {
+    userban = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a string or a number' });
+  }
+});
+
+app.post('/setUserbanreason', (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'string') {
+    userbanreason = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a string' });
+  }
+});
+
+app.post('/setUserbantime', (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'string' || typeof value === 'number') {
+    userbantime = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a string or a number' });
   }
 });
 
