@@ -2,186 +2,84 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json()); // чтобы принимать JSON в теле запросов
+app.use(express.json());
 
-// Переменные (храним в памяти)
-let var1 = "значение1";
-let var2 = "значение2";
+// Centralized state object
+const globalState = {
+  var1: "значение1",
+  var2: "значение2",
 
-let userkick = "user";
-let userkickreason = "1234";
+  userkick: "user",
+  userkickreason: "1234",
 
-let userban = "user";
-let userbanreason = "1234";
-let userbantime = "1y"; // y=year mo=month d=day h=hour m=minute s=second perm=permanent
+  userban: "user",
+  userbanreason: "1234",
+  userbantime: "1y",
 
-let juser = "user";
-let jlenght = "10";
-let jtype = "1";
+  juser: "user",
+  jlenght: "10",
+  jtype: "1",
 
-let suser = "user";
+  suser: "user",
 
-let muser = "user"
-let mlenght = "10"
+  muser: "user",
+  mlenght: "10"
+};
 
-// Эндпоинт для получения значений (возвращаем в виде таблицы JSON)
-app.get('/all', (req, res) => {
-  res.json({ juser, jlenght, jtype, suser, muser, mlenght, var1, var2, userkick, userkickreason, userban, userbanreason, userbantime });
-});
+// Reusable setter function
+function createSetterRoute(endpoint, key, allowedTypes = ['string']) {
+  app.post(endpoint, (req, res) => {
+    const { value } = req.body;
 
-app.get('/j', (req, res) => {
-  res.json({ juser, jlenght, jtype });
-});
+    if (allowedTypes.includes(typeof value)) {
+      globalState[key] = value;
+      res.json({ status: 'ok', [key]: value });
+    } else {
+      res.status(400).json({ error: `Value must be of type: ${allowedTypes.join(' or ')}` });
+    }
+  });
+}
 
-app.get('/spy', (req, res) => {
-  res.json({ suser });
-});
+// Reusable getter for JSON response
+function createGetterRoute(endpoint, keys) {
+  app.get(endpoint, (req, res) => {
+    const response = {};
+    keys.forEach(key => {
+      response[key] = globalState[key];
+    });
+    res.json(response);
+  });
+}
 
-app.get('/mute', (req, res) => {
-  res.json({ muser, mlenght });
-});
+// Getters (same as your original API)
+createGetterRoute('/all', Object.keys(globalState));
+createGetterRoute('/j', ['juser', 'jlenght', 'jtype']);
+createGetterRoute('/spy', ['suser']);
+createGetterRoute('/mute', ['muser', 'mlenght']);
+createGetterRoute('/vars', ['var1', 'var2']);
+createGetterRoute('/kicksbans', ['userkick', 'userkickreason', 'userban', 'userbanreason', 'userbantime']);
 
-app.get('/vars', (req, res) => {
-  res.json({ var1, var2 });
-});
+// Setters (same paths as before)
+createSetterRoute('/setVar1', 'var1', ['string']);
+createSetterRoute('/setVar2', 'var2', ['string']);
 
-app.get('/kicksbans', (req, res) => {
-  res.json({ userkick, userkickreason, userban, userbanreason, userbantime });
-});
+createSetterRoute('/setUserkick', 'userkick', ['string', 'number']);
+createSetterRoute('/setUserkickreason', 'userkickreason', ['string']);
 
-// Эндпоинты для изменения значений
-// Меняем var1
-app.post('/setVar1', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string') {
-    var1 = value;
-    res.json({ status: 'ok', var1 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string' });
-  }
-});
+createSetterRoute('/setUserban', 'userban', ['string', 'number']);
+createSetterRoute('/setUserbanreason', 'userbanreason', ['string']);
+createSetterRoute('/setUserbantime', 'userbantime', ['string', 'number']);
 
-// Меняем var2
-app.post('/setVar2', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string') {
-    var2 = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string' });
-  }
-});
+createSetterRoute('/setjuser', 'juser', ['string']);
+createSetterRoute('/setjlenght', 'jlenght', ['string', 'number']);  // originally was a string
+createSetterRoute('/setjtype', 'jtype', ['string', 'number']);
 
-app.post('/setUserkick', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string' || typeof value === 'number') {
-    userkick = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string or a number' });
-  }
-});
+createSetterRoute('/setspy', 'suser', ['string', 'number']);
 
-app.post('/setUserkickreason', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string') {
-    userkickreason = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string' });
-  }
-});
+createSetterRoute('/setmuser', 'muser', ['string', 'number']);
+createSetterRoute('/setmlenght', 'mlenght', ['string', 'number']); // match flexibility
 
-app.post('/setUserban', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string' || typeof value === 'number') {
-    userban = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string or a number' });
-  }
-});
-
-app.post('/setUserbanreason', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string') {
-    userbanreason = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string' });
-  }
-});
-
-app.post('/setUserbantime', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string' || typeof value === 'number') {
-    userbantime = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string or a number' });
-  }
-});
-
-app.post('/setjlenght', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'number') {
-    juser = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a number' });
-  }
-});
-
-app.post('/setjuser', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string') {
-    juser = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string' });
-  }
-});
-
-app.post('/setjtype', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'number') {
-    jtype = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a number' });
-  }
-});
-
-app.post('/setspy', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string' || typeof value === 'number') {
-    userbantime = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string or a number' });
-  }
-});
-
-app.post('/setmuser', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'string' || typeof value === 'number') {
-    muser = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a string or a number' });
-  }
-});
-
-app.post('/setmlenght', (req, res) => {
-  const { value } = req.body;
-  if (typeof value === 'number') {
-    mlenght = value;
-    res.json({ status: 'ok', var2 });
-  } else {
-    res.status(400).json({ error: 'Value must be a number' });
-  }
-});
-
+// Start server
 app.listen(port, '0.0.0.0', () => {
   console.log(`API listening at http://0.0.0.0:${port}`);
 });
