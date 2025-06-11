@@ -15,7 +15,32 @@ let userban = "user";
 let userbanreason = "1234";
 let userbantime = "1y"; // y=year mo=month d=day h=hour m=minute s=second perm=permanent
 
+let juser = "user";
+let jlenght = "10";
+let jtype = "1";
+
+let suser = "user";
+
+let muser = "user"
+let mlenght = "10"
+
 // Эндпоинт для получения значений (возвращаем в виде таблицы JSON)
+app.get('/all', (req, res) => {
+  res.json({ juser, jlenght, jtype, suser, muser, mlenght, var1, var2, userkick, userkickreason, userban, userbanreason, userbantime });
+});
+
+app.get('/j', (req, res) => {
+  res.json({ juser, jlenght, jtype });
+});
+
+app.get('/spy', (req, res) => {
+  res.json({ suser });
+});
+
+app.get('/mute', (req, res) => {
+  res.json({ muser, mlenght });
+});
+
 app.get('/vars', (req, res) => {
   res.json({ var1, var2 });
 });
@@ -94,6 +119,70 @@ app.post('/setUserbantime', (req, res) => {
     res.json({ status: 'ok', var2 });
   } else {
     res.status(400).json({ error: 'Value must be a string or a number' });
+  }
+});
+
+let juser = "user";
+let jlenght = "10";
+let jtype = "1";
+
+app.post('/setjlenght', (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'number') {
+    juser = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a number' });
+  }
+});
+
+app.post('/setjuser', (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'string') {
+    juser = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a string' });
+  }
+});
+
+app.post('/setjtype', (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'number') {
+    jtype = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a number' });
+  }
+});
+
+app.post('/setspy, (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'string' || typeof value === 'number') {
+    userbantime = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a string or a number' });
+  }
+});
+
+app.post('/setmuser', (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'string' || typeof value === 'number') {
+    muser = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a string or a number' });
+  }
+});
+
+app.post('/setmlenght', (req, res) => {
+  const { value } = req.body;
+  if (typeof value === 'number') {
+    mlenght = value;
+    res.json({ status: 'ok', var2 });
+  } else {
+    res.status(400).json({ error: 'Value must be a number' });
   }
 });
 
