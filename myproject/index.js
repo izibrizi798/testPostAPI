@@ -60,17 +60,17 @@ createGetterRoute('/vars', ['var1', 'var2']);
 createGetterRoute('/kicksbans', ['userkick', 'userkickreason', 'userban', 'userbanreason', 'userbantime']);
 
 // Setters (same paths as before)
-createSetterRoute('/setVar1', 'var1', ['string']);
-createSetterRoute('/setVar2', 'var2', ['string']);
+createSetterRoute('/setVar1', 'var1', ['string', 'number']);
+createSetterRoute('/setVar2', 'var2', ['string', 'number']);
 
 createSetterRoute('/setUserkick', 'userkick', ['string', 'number']);
-createSetterRoute('/setUserkickreason', 'userkickreason', ['string']);
+createSetterRoute('/setUserkickreason', 'userkickreason', ['string', 'number']);
 
 createSetterRoute('/setUserban', 'userban', ['string', 'number']);
 createSetterRoute('/setUserbanreason', 'userbanreason', ['string']);
 createSetterRoute('/setUserbantime', 'userbantime', ['string', 'number']);
 
-createSetterRoute('/setjuser', 'juser', ['string']);
+createSetterRoute('/setjuser', 'juser', ['string', 'number']);
 createSetterRoute('/setjlenght', 'jlenght', ['string', 'number']);  // originally was a string
 createSetterRoute('/setjtype', 'jtype', ['string', 'number']);
 
@@ -82,4 +82,5 @@ createSetterRoute('/setmlenght', 'mlenght', ['string', 'number']); // match flex
 // Start server
 app.listen(port, '0.0.0.0', () => {
   console.log(`API listening at http://0.0.0.0:${port}`);
+  console.log('MADE BY ILOVEPOTATOCHISP2022. GITHUB Izibrizi798 ROBLOX IlovePotatochips2022')
 });
