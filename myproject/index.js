@@ -152,7 +152,7 @@ app.post('/setjtype', (req, res) => {
   }
 });
 
-app.post('/setspy, (req, res) => {
+app.post('/setspy', (req, res) => {
   const { value } = req.body;
   if (typeof value === 'string' || typeof value === 'number') {
     userbantime = value;
