@@ -1,4 +1,5 @@
 # Express JSON State API
+# This API built specially for mine dicord bot. For interacting outside of discord from a bot.
 
 A lightweight RESTful API built with **Node.js + Express** that allows setting and retrieving simple in-memory state values. Ideal for prototyping, bot management, control panels, or temporary key-value storage.
 
